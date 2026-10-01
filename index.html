@@ -24,69 +24,82 @@
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="appSidebar">
-            <div class="sidebar-header">
-                <div class="brand-logo">
-                    <i class="bi bi-gear-wide-connected text-warning fs-3"></i>
-                    <div>
-                        <h6 class="mb-0 fw-bold text-white">SEABERY Training</h6>
-                        <small class="text-white-50">TVET Assessment Platform</small>
-                    </div>
+        <aside id="appSidebar" class="app-sidebar">
+            <!-- Sidebar Header & Branding -->
+            <div class="sidebar-header d-flex align-items-center gap-3 px-3 py-3 border-bottom border-secondary border-opacity-25">
+                <div class="brand-logo bg-primary text-white rounded-3 d-flex align-items-center justify-content-center shadow-sm">
+                    <i class="bi bi-gear-fill fs-5"></i>
+                </div>
+                <div class="brand-text">
+                    <h6 class="mb-0 fw-bold text-white">WITPax ETNA</h6>
+                    <small class="text-secondary fs-7">Assessment Portal</small>
                 </div>
             </div>
-            
-            <nav class="sidebar-nav">
-                <ul class="nav flex-column">
+
+            <!-- Navigation Menu -->
+            <nav class="sidebar-nav p-3 flex-grow-1">
+                <ul class="nav nav-pills flex-column gap-1">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" data-target="view-welcome">
-                            <i class="bi bi-house-door me-2"></i> Welcome & Info
+                        <a href="#" class="nav-link active" data-target="view-welcome">
+                            <i class="bi bi-house-door me-2"></i>
+                            <span>Welcome & Info</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-form">
-                            <i class="bi bi-pencil-square me-2"></i> Assessment Form
+                        <a href="#" class="nav-link" data-target="view-form">
+                            <i class="bi bi-pencil-square me-2"></i>
+                            <span>Assessment Form</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-forum-summary">
-                            <i class="bi bi-chat-left-text me-2"></i> Open Forum Summary
+                        <a href="#" class="nav-link" data-target="view-forum-summary">
+                            <i class="bi bi-chat-left-text me-2"></i>
+                            <span>Open Forum Summary</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-records">
-                            <i class="bi bi-table me-2"></i> Data Records
+                        <a href="#" class="nav-link" data-target="view-records">
+                            <i class="bi bi-table me-2"></i>
+                            <span>Data Records</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-analytics">
-                            <i class="bi bi-bar-chart-line me-2"></i> Analytics Dashboard
+                        <a href="#" class="nav-link" data-target="view-analytics">
+                            <i class="bi bi-graph-up me-2"></i>
+                            <span>Analytics Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-report">
-                            <i class="bi bi-file-earmark-text me-2"></i> Assessment Report
+                        <a href="#" class="nav-link" data-target="view-report">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            <span>Assessment Report</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-export">
-                            <i class="bi bi-download me-2"></i> Export & Backup
+                        <a href="#" class="nav-link" data-target="view-export">
+                            <i class="bi bi-download me-2"></i>
+                            <span>Export & Backup</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-target="view-settings">
-                            <i class="bi bi-sliders me-2"></i> Settings
+                    
+                    <!-- Separator for System Settings -->
+                    <li class="nav-item border-top border-secondary border-opacity-25 pt-2 mt-2">
+                        <a href="#" class="nav-link" data-target="view-settings">
+                            <i class="bi bi-sliders me-2"></i>
+                            <span>Settings</span>
                         </a>
                     </li>
                 </ul>
             </nav>
 
-            <div class="sidebar-footer">
+            <!-- Sidebar Footer Status Indicator -->
+            <div class="sidebar-footer p-3 border-top border-secondary border-opacity-25">
                 <div class="storage-indicator">
-                    <small class="text-white-50 d-block mb-1">Local Storage Status</small>
+                    <small class="text-secondary d-block mb-1">Local Storage Status</small>
                     <div class="progress" style="height: 6px;">
                         <div class="progress-bar bg-success" id="storageProgressBar" style="width: 5%"></div>
                     </div>
-                    <small class="text-white-50 mt-1 d-block" id="recordCountText">0 records stored</small>
+                    <small class="text-secondary mt-1 d-block" id="recordCountText">0 records stored</small>
                 </div>
             </div>
         </aside>

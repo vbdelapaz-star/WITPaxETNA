@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welding Instructors Training - Needs Assessment & Analytics</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- External Libraries -->
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- html2canvas and jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <i class="bi bi-gear-wide-connected text-warning fs-3"></i>
+                    <div>
+                        <h6 class="mb-0 fw-bold text-white">SEABERY Training</h6>
+                        <small class="text-white-50">TVET Assessment Platform</small>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-target="view-welcome">
+                            <i class="bi bi-house-door me-2"></i> Welcome & Info
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-form">
+                            <i class="bi bi-pencil-square me-2"></i> Assessment Form
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-forum-summary">
+                            <i class="bi bi-chat-left-text me-2"></i> Open Forum Summary
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-records">
+                            <i class="bi bi-table me-2"></i> Data Records
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-analytics">
+                            <i class="bi bi-bar-chart-line me-2"></i> Analytics Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-report">
+                            <i class="bi bi-file-earmark-text me-2"></i> Assessment Report
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-export">
+                            <i class="bi bi-download me-2"></i> Export & Backup
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="view-settings">
+                            <i class="bi bi-sliders me-2"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="storage-indicator">
+                    <small class="text-white-50 d-block mb-1">Local Storage Status</small>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" id="storageProgressBar" style="width: 5%"></div>
+                    </div>
+                    <small class="text-white-50 mt-1 d-block" id="recordCountText">0 records stored</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="header-titles">
+                    <h5 class="mb-0 fw-bold text-navy">Welding Instructors Training Utilizing SEABERY Welding Simulator</h5>
+                    <span class="text-muted small">Participant Expectations and Pre-Training Needs Assessment</span>
+                </div>
+                <div class="header-actions">
+                    <span class="badge bg-light text-dark border me-2" id="draftStatusBadge"><i class="bi bi-check-circle me-1"></i> Ready</span>
+                    <button class="btn btn-sm btn-outline-danger" id="quickResetBtn" title="Reset Current Form"><i class="bi bi-arrow-counterclockwise"></i> Clear</button>
+                </div>
+            </header>
+
+            <!-- Container for Dynamic Views -->
+            <div class="content-body p-3 p-md-4">
+
+                <!-- 1. WELCOME & INSTRUCTIONS VIEW -->
+                <section id="view-welcome" class="app-view active">
+                    <div class="hero-card card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4 p-lg-5">
+                            <div class="row align-items-center">
+                                <div class="col-lg-8">
+                                    <span class="badge bg-warning text-dark mb-2 px-3 py-2 fw-semibold">TVET Capacity Building Program</span>
+                                    <h2 class="fw-bold text-navy mb-3">Welding Instructors Training Utilizing SEABERY Welding Simulator</h2>
+                                    <h5 class="text-secondary mb-4">Participant Expectations and Pre-Training Needs Assessment</h5>
+                                    <p class="lead text-dark fs-6">
+                                        Welcome to the diagnostic and needs assessment platform for the 4-day intensive welding instructor capacity-building training program. This tool captures baseline competencies, teaching assignments, technical expectations, and learning priority gaps.
+                                    </p>
+                                    <div class="d-flex flex-wrap gap-2 mt-4">
+                                        <button class="btn btn-primary btn-lg" onclick="app.navigateTo('view-form')"><i class="bi bi-pencil-square me-2"></i>Start New Assessment</button>
+                                        <button class="btn btn-outline-primary btn-lg" onclick="app.navigateTo('view-records')"><i class="bi bi-table me-2"></i>View Saved Records</button>
+                                        <button class="btn btn-outline-success btn-lg" onclick="app.navigateTo('view-analytics')"><i class="bi bi-bar-chart-line me-2"></i>Open Analytics</button>
+                                        <button class="btn btn-outline-dark btn-lg" onclick="app.navigateTo('view-report')"><i class="bi bi-file-earmark-text me-2"></i>Generate Report</button>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 d-none d-lg-block text-center">
+                                    <i class="bi bi-gpu-card text-primary display-1 opacity-25"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm text-center p-3">
+                                <div class="card-body">
+                                    <div class="icon-circle bg-primary-subtle text-primary mb-3 mx-auto">
+                                        <i class="bi bi-bullseye fs-3"></i>
+                                    </div>
+                                    <h5 class="card-title fw-bold">Purpose</h5>
+                                    <p class="card-text text-muted small">Identify technical and pedagogical gaps to customize simulator practice and instruction during the 4-day training.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm text-center p-3">
+                                <div class="card-body">
+                                    <div class="icon-circle bg-success-subtle text-success mb-3 mx-auto">
+                                        <i class="bi bi-person-badge fs-3"></i>
+                                    </div>
+                                    <h5 class="card-title fw-bold">Target Audience</h5>
+                                    <p class="card-text text-muted small">TVET Welding Instructors, Master Trainers, Curriculum Developers, and Assessment Specialists.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm text-center p-3">
+                                <div class="card-body">
+                                    <div class="icon-circle bg-warning-subtle text-warning mb-3 mx-auto">
+                                        <i class="bi bi-clock-history fs-3"></i>
+                                    </div>
+                                    <h5 class="card-title fw-bold">Duration</h5>
+                                    <p class="card-text text-muted small">Estimated completion time: 15–20 minutes. Draft progress can be saved at any time.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm text-center p-3">
+                                <div class="card-body">
+                                    <div class="icon-circle bg-danger-subtle text-danger mb-3 mx-auto">
+                                        <i class="bi bi-shield-lock fs-3"></i>
+                                    </div>
+                                    <h5 class="card-title fw-bold">Data Privacy</h5>
+                                    <p class="card-text text-muted small">Data is stored locally in your browser session/storage. No external server tracking or unauthorized transmission.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mt-4">
+                        <div class="card-header bg-white fw-bold py-3">
+                            <i class="bi bi-info-circle text-primary me-2"></i>Assessment Completion Instructions & Rules
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0 text-secondary">
+                                <li><strong>Part I–VI:</strong> Complete background details, teaching profiles, confidence matrices, and open expectations.</li>
+                                <li><strong>Part VII (Self-Assessment Learning Needs):</strong> Rate both your <i>Current Ability</i> (1–5) and <i>Training Importance</i> (1–5). The application automatically calculates priority gaps (Importance – Ability).</li>
+                                <li><strong>Part VIII (Baseline Knowledge Check):</strong> Answer 10 multiple-choice questions regarding simulator integration and TVET assessment principles.</li>
+                                <li><strong>Offline Capability:</strong> All data stays stored in your web browser. Use the <i>Export & Backup</i> section to download Excel/JSON files.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. PARTICIPANT ASSESSMENT FORM VIEW -->
+                <section id="view-form" class="app-view">
+                    <!-- Form Progress Step Bar -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-navy" id="currentStepTitle">Part I: Participant Information</span>
+                                <span class="badge bg-primary" id="completionPercentageBadge">0% Completed</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" id="formProgressBar" style="width: 12.5%"></div>
+                            </div>
+                            <!-- Stepper Tabs -->
+                            <div class="step-wizard mt-3 d-flex flex-wrap justify-content-between">
+                                <button class="step-btn active" data-step="1">Part I</button>
+                                <button class="step-btn" data-step="2">Part II</button>
+                                <button class="step-btn" data-step="3">Part III</button>
+                                <button class="step-btn" data-step="4">Part IV</button>
+                                <button class="step-btn" data-step="5">Part V</button>
+                                <button class="step-btn" data-step="6">Part VI</button>
+                                <button class="step-btn" data-step="7">Part VII</button>
+                                <button class="step-btn" data-step="8">Part VIII</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="assessmentForm" novalidate>
+                        <!-- STEP 1: PART I -->
+                        <div class="form-step active" data-step="1">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part I: Participant Profile & Information
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Participant Code <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="participantCode" name="participantCode" required>
+                                            <div class="form-text">Auto-generated, editable (e.g. WELD-0001)</div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label class="form-label fw-semibold">Full Name <span class="text-muted">(Optional in Anonymous Mode)</span></label>
+                                            <input type="text" class="form-control" id="fullName" name="fullName">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Institution / Training Center <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="institution" name="institution" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Region / Province <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="region" name="region" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Current Position / Designation <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="position" name="position" required></select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Highest Relevant Qualification <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="highestQualification" name="highestQualification" required></select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Years Working in TVET <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="yearsTVET" name="yearsTVET" required></select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Years Teaching / Training Welding <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="yearsWeldingTeaching" name="yearsWeldingTeaching" required></select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">Welding Qualifications or Certifications Held <span class="text-muted">(Select all that apply)</span></label>
+                                            <div id="qualificationsHeldContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: PART II -->
+                        <div class="form-step" data-step="2">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part II: Current Teaching Assignment
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">Welding Programs / Qualifications Currently Taught <span class="text-muted">(Select all that apply)</span></label>
+                                            <div id="programsTaughtContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Average Number of Welding Learners per Class <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="classSize" name="classSize" required></select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">General Learner Skill Level <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="skillLevel" name="skillLevel" required></select>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <label class="form-label fw-semibold">Common Learner-Related Challenges</label>
+                                                <span class="badge bg-secondary" id="challengeCountBadge">0 / 5 selected</span>
+                                            </div>
+                                            <small class="text-muted d-block mb-2">Select up to five (5) options that present the biggest obstacles in your instruction.</small>
+                                            <div id="challengesContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">Three Most Important Welding Competencies Learners Need to Improve</label>
+                                            <div class="row g-2">
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" id="compImprove1" name="compImprove1" placeholder="1. e.g., Root pass penetration in 3G">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" id="compImprove2" name="compImprove2" placeholder="2. e.g., Angle and arc length consistency">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="text" class="form-control" id="compImprove3" name="compImprove3" placeholder="3. e.g., Weld defect visual inspection">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: PART III -->
+                        <div class="form-step" data-step="3">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part III: Experience with Welding Equipment and Processes
+                                </div>
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold text-secondary mb-3">Self-Rating Technical Confidence Matrix (Scale 1–5)</h6>
+                                    <p class="small text-muted mb-3">1 = No confidence | 2 = Limited confidence | 3 = Moderate confidence | 4 = Confident | 5 = Highly confident</p>
+                                    
+                                    <div class="table-responsive mb-4">
+                                        <table class="table table-bordered table-hover align-middle rating-table" id="technicalMatrixTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Technical Competency Area</th>
+                                                    <th class="text-center" style="width:70px;">1</th>
+                                                    <th class="text-center" style="width:70px;">2</th>
+                                                    <th class="text-center" style="width:70px;">3</th>
+                                                    <th class="text-center" style="width:70px;">4</th>
+                                                    <th class="text-center" style="width:70px;">5</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="technicalMatrixBody"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Which welding processes have you personally performed within the past 12 months?</label>
+                                            <div id="processes12mContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Which welding processes do you teach most frequently?</label>
+                                            <div id="processesTeachContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">What technical welding topics would you most like to strengthen during this training?</label>
+                                            <textarea class="form-control" id="technicalTopicsToStrengthen" name="technicalTopicsToStrengthen" rows="3" placeholder="Describe specific processes, parameters, or metallurgical topics..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: PART IV -->
+                        <div class="form-step" data-step="4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part IV: Experience with Simulation and Digital Technology
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Have you previously used a welding simulator? <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="usedSimulator" name="usedSimulator" required>
+                                                <option value="">-- Select --</option>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6" id="simulatorTypeGroup">
+                                            <label class="form-label fw-semibold">If yes, which type of simulator have you used?</label>
+                                            <select class="form-select" id="simulatorType" name="simulatorType"></select>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">Describe your experience with the SEABERY welding simulator <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="seaberyExperience" name="seaberyExperience" required></select>
+                                        </div>
+                                    </div>
+
+                                    <h6 class="fw-bold text-secondary mb-3">SEABERY Simulator Operational Confidence Matrix (Scale 1–5)</h6>
+                                    <div class="table-responsive mb-4">
+                                        <table class="table table-bordered table-hover align-middle rating-table" id="simulatorMatrixTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Simulator Function / Activity</th>
+                                                    <th class="text-center" style="width:70px;">1</th>
+                                                    <th class="text-center" style="width:70px;">2</th>
+                                                    <th class="text-center" style="width:70px;">3</th>
+                                                    <th class="text-center" style="width:70px;">4</th>
+                                                    <th class="text-center" style="width:70px;">5</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="simulatorMatrixBody"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">What concerns do you have about using the SEABERY welding simulator?</label>
+                                            <div id="simulatorConcernsContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">What simulator functions or activities do you most want to practice?</label>
+                                            <textarea class="form-control" id="simulatorFunctionsToPractice" name="simulatorFunctionsToPractice" rows="3" placeholder="e.g., Setting up joint parameters, customizing teacher software reports..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 5: PART V -->
+                        <div class="form-step" data-step="5">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part V: Instructional and Curriculum Needs
+                                </div>
+                                <div class="card-body p-4">
+                                    <h6 class="fw-bold text-secondary mb-3">Instructional Competency & Confidence Matrix (Scale 1–5)</h6>
+                                    <p class="small text-muted mb-3">1 = Needs substantial support | 2 = Needs considerable support | 3 = Adequate | 4 = Strong | 5 = Highly competent</p>
+                                    
+                                    <div class="table-responsive mb-4">
+                                        <table class="table table-bordered table-hover align-middle rating-table" id="instructionalMatrixTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Instructional & Assessment Area</th>
+                                                    <th class="text-center" style="width:70px;">1</th>
+                                                    <th class="text-center" style="width:70px;">2</th>
+                                                    <th class="text-center" style="width:70px;">3</th>
+                                                    <th class="text-center" style="width:70px;">4</th>
+                                                    <th class="text-center" style="width:70px;">5</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="instructionalMatrixBody"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Which teaching approaches would you like to develop further?</label>
+                                            <div id="teachingApproachesContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">How do you currently assess welding learners?</label>
+                                            <div id="assessmentMethodsContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">What assessment difficulties do you experience?</label>
+                                            <div id="assessmentDifficultiesContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Which curriculum-related outputs would be most useful to you?</label>
+                                            <div id="curriculumOutputsContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 6: PART VI -->
+                        <div class="form-step" data-step="6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part VI: Open Forum Participant Expectations
+                                </div>
+                                <div class="card-body p-4">
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">1. What do you expect to learn from this four-day training program?</label>
+                                            <textarea class="form-control" id="expLearn" name="expLearn" rows="2" placeholder="Your expectations..."></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">2. What knowledge, skills, or tools do you expect to acquire?</label>
+                                            <textarea class="form-control" id="expAcquire" name="expAcquire" rows="2" placeholder="Specific competencies or tools..."></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">3. What specific questions about the SEABERY welding simulator should facilitators address?</label>
+                                            <textarea class="form-control" id="expQuestions" name="expQuestions" rows="2" placeholder="Key technical or administrative questions..."></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">4. What practical activities should be prioritized?</label>
+                                            <textarea class="form-control" id="expPriorities" name="expPriorities" rows="2" placeholder="Hands-on exercises or software tasks..."></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label fw-semibold">5. What should participants be able to do by the end of the four-day program?</label>
+                                            <textarea class="form-control" id="expOutcomes" name="expOutcomes" rows="2" placeholder="Target end-of-training competencies..."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">What challenges might prevent you from applying the learning in your institution?</label>
+                                            <div id="barriersContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">What support would help you apply the learning after the training?</label>
+                                            <div id="supportNeedsContainer" class="checkbox-grid border rounded p-3 bg-light"></div>
+                                        </div>
+                                    </div>
+
+                                    <h6 class="fw-bold text-secondary mb-2">Priority Expectations Matrix</h6>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <input type="text" class="form-control" id="priorityExp1" name="priorityExp1" placeholder="Priority 1 Expectation (Most Critical)">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control" id="priorityExp2" name="priorityExp2" placeholder="Priority 2 Expectation">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" class="form-control" id="priorityExp3" name="priorityExp3" placeholder="Priority 3 Expectation">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 7: PART VII -->
+                        <div class="form-step" data-step="7">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-navy text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                                    <span>Part VII: Self-Assessment of Learning Needs & Priority Gaps</span>
+                                    <span class="badge bg-warning text-dark">Auto-Calculated Priority Gap</span>
+                                </div>
+                                <div class="card-body p-4">
+                                    <p class="small text-muted mb-3">
+                                        Rate both <strong>Column A (Current Ability, 1–5)</strong> and <strong>Column B (Training Importance, 1–5)</strong>.
+                                        The Priority Gap is automatically computed as: <span class="badge bg-dark">Priority Gap = Training Importance - Current Ability</span>.
+                                    </p>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered align-middle text-center rating-table" id="learningNeedsTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th class="text-start">Training Topic</th>
+                                                    <th style="width: 140px;">Current Ability (1–5)</th>
+                                                    <th style="width: 140px;">Training Importance (1–5)</th>
+                                                    <th style="width: 130px;">Priority Gap</th>
+                                                    <th style="width: 140px;">Priority Level</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="learningNeedsBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 8: PART VIII -->
+                        <div class="form-step" data-step="8">
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    Part VIII: Short Baseline Knowledge Check (10 Questions)
+                                </div>
+                                <div class="card-body p-4">
+                                    <p class="text-muted small mb-4">
+                                        This brief baseline quiz assesses general understanding of welding simulation, pedagogical sequence, and competency assessment. It is used exclusively to adjust training delivery.
+                                    </p>
+
+                                    <div id="baselineQuestionsContainer"></div>
+                                </div>
+                            </div>
+
+                            <!-- Consent and Final Submission Card -->
+                            <div class="card border-0 shadow-sm border-start border-4 border-primary p-3 bg-light">
+                                <div class="card-body">
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="consentCheckbox" required>
+                                        <label class="form-check-label fw-semibold" for="consentCheckbox">
+                                            I confirm that the information provided is accurate and I consent to the local processing of this diagnostic assessment data for training improvement purposes.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Action Navigation Footer -->
+                        <div class="card border-0 shadow-sm mt-3">
+                            <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                <div>
+                                    <button type="button" class="btn btn-outline-secondary me-2" id="btnDraftSave"><i class="bi bi-save me-1"></i> Save Draft</button>
+                                    <button type="button" class="btn btn-outline-danger" id="btnClearForm"><i class="bi bi-trash me-1"></i> Clear Form</button>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-secondary me-2" id="btnPrevStep" disabled><i class="bi bi-arrow-left me-1"></i> Previous</button>
+                                    <button type="button" class="btn btn-primary" id="btnNextStep">Continue <i class="bi bi-arrow-right ms-1"></i></button>
+                                    <button type="submit" class="btn btn-success d-none" id="btnSubmitForm"><i class="bi bi-check-circle me-1"></i> Submit Assessment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- 3. OPEN FORUM SUMMARY VIEW -->
+                <section id="view-forum-summary" class="app-view">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold text-navy mb-0">Open Forum Participant Expectations Summary</h4>
+                        <button class="btn btn-outline-primary btn-sm" onclick="app.renderForumSummary()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh Summary</button>
+                    </div>
+
+                    <div class="row g-3" id="forumSummaryContainer">
+                        <!-- Dynamic Forum Content Rendered Here -->
+                    </div>
+                </section>
+
+                <!-- 4. DATA RECORDS SCREEN -->
+                <section id="view-records" class="app-view">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                            <h5 class="fw-bold text-navy mb-0">Saved Participant Assessment Records</h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-danger" id="btnDeleteSelected"><i class="bi bi-trash"></i> Delete Selected</button>
+                                <button class="btn btn-sm btn-outline-success" onclick="app.navigateTo('view-export')"><i class="bi bi-download"></i> Export Data</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Filter Bar -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control form-control-sm" id="searchRecordInput" placeholder="Search by code, name, institution...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select form-select-sm" id="filterInstitutionSelect">
+                                        <option value="">All Institutions</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select form-select-sm" id="filterRegionSelect">
+                                        <option value="">All Regions</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-sm btn-secondary w-100" id="btnResetFilters">Reset Filters</button>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle" id="recordsTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 30px;"><input type="checkbox" id="selectAllRecords"></th>
+                                            <th>Code</th>
+                                            <th>Participant Name</th>
+                                            <th>Institution</th>
+                                            <th>Submission Date</th>
+                                            <th>Baseline Score</th>
+                                            <th>Tech Conf.</th>
+                                            <th>Sim Conf.</th>
+                                            <th>Inst. Conf.</th>
+                                            <th>Mean Gap</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recordsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. ANALYTICS DASHBOARD VIEW -->
+                <section id="view-analytics" class="app-view">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold text-navy mb-0">Pre-Training Assessment Analytics Dashboard</h4>
+                        <span class="text-muted small" id="analyticsRecordCount">Based on 0 participants</span>
+                    </div>
+
+                    <!-- Summary KPI Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card border-0 shadow-sm border-start border-4 border-primary">
+                                <div class="card-body">
+                                    <small class="text-muted fw-bold d-block">TOTAL PARTICIPANTS</small>
+                                    <h3 class="fw-bold mb-0 text-navy" id="kpiTotalParticipants">0</h3>
+                                    <small class="text-muted" id="kpiTotalInstitutions">0 Institutions</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card border-0 shadow-sm border-start border-4 border-success">
+                                <div class="card-body">
+                                    <small class="text-muted fw-bold d-block">BASELINE SCORE (AVG)</small>
+                                    <h3 class="fw-bold mb-0 text-success" id="kpiAvgBaseline">0%</h3>
+                                    <small class="text-muted" id="kpiBaselineLevel">No Data</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card border-0 shadow-sm border-start border-4 border-info">
+                                <div class="card-body">
+                                    <small class="text-muted fw-bold d-block">TECHNICAL CONFIDENCE</small>
+                                    <h3 class="fw-bold mb-0 text-info" id="kpiAvgTechConf">0.0 / 5.0</h3>
+                                    <small class="text-muted" id="kpiTechBand">Band: --</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card border-0 shadow-sm border-start border-4 border-warning">
+                                <div class="card-body">
+                                    <small class="text-muted fw-bold d-block">PRIORITY GAP (AVG)</small>
+                                    <h3 class="fw-bold mb-0 text-warning" id="kpiAvgPriorityGap">0.0</h3>
+                                    <small class="text-muted" id="kpiGapBand">Band: --</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">1. Participants by Institution</div>
+                                <div class="card-body"><canvas id="chartInstitutions" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">2. Participants by Region</div>
+                                <div class="card-body"><canvas id="chartRegions" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">3. Years Teaching Welding Profile</div>
+                                <div class="card-body"><canvas id="chartYearsTeaching" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">4. Welding Processes Taught</div>
+                                <div class="card-body"><canvas id="chartProcessesTaught" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">5. Prior Welding Simulator Experience</div>
+                                <div class="card-body"><canvas id="chartPriorSimulator" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">6. Baseline Knowledge Score Distribution</div>
+                                <div class="card-body"><canvas id="chartBaselineDist" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">7. Technical Confidence by Competency Area</div>
+                                <div class="card-body"><canvas id="chartTechnicalMatrix" height="280"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">8. SEABERY Simulator Operational Confidence</div>
+                                <div class="card-body"><canvas id="chartSimulatorMatrix" height="280"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">9. Instructional Competency Confidence</div>
+                                <div class="card-body"><canvas id="chartInstructionalMatrix" height="280"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold text-danger">10. Highest-Priority Learning Need Priority Gaps</div>
+                                <div class="card-body"><canvas id="chartPriorityGaps" height="320"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">11. Common Learner Challenges</div>
+                                <div class="card-body"><canvas id="chartChallenges" height="250"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">12. Common Institutional Barriers</div>
+                                <div class="card-body"><canvas id="chartBarriers" height="250"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">13. Desired Curriculum Outputs</div>
+                                <div class="card-body"><canvas id="chartOutputs" height="250"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold">14. Training Support Requested</div>
+                                <div class="card-body"><canvas id="chartSupportNeeds" height="250"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. AUTOMATIC ASSESSMENT REPORT VIEW -->
+                <section id="view-report" class="app-view">
+                    <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+                        <h4 class="fw-bold text-navy mb-0">Comprehensive Assessment Report</h4>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="report.printReport()"><i class="bi bi-printer me-1"></i> Print / Save as PDF</button>
+                            <button class="btn btn-primary btn-sm" onclick="report.downloadPDF()"><i class="bi bi-file-pdf me-1"></i> Download PDF Document</button>
+                        </div>
+                    </div>
+
+                    <div class="report-document p-4 p-md-5 bg-white shadow-sm border rounded" id="reportPrintArea">
+                        <!-- Dynamic Assessment Report Rendered Here -->
+                    </div>
+                </section>
+
+                <!-- 7. EXPORT AND BACKUP VIEW -->
+                <section id="view-export" class="app-view">
+                    <h4 class="fw-bold text-navy mb-3">Data Export & System Backup</h4>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Excel & CSV Export
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small">
+                                        Export comprehensive data sheets for analytical processing. Includes 12 worksheets covering all survey parts, normalized long-format tables, and data dictionary.
+                                    </p>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success" onclick="exportData.toXLSX()"><i class="bi bi-download me-2"></i>Export All Records to Excel (.XLSX)</button>
+                                        <button class="btn btn-outline-success" onclick="exportData.toCSV()"><i class="bi bi-filetype-csv me-2"></i>Export Records to CSV Format</button>
+                                        <button class="btn btn-outline-dark" onclick="exportData.toLongFormatXLSX()"><i class="bi bi-table me-2"></i>Export Long-Format Matrix Ratings (.XLSX)</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-header bg-navy text-white fw-bold py-3">
+                                    <i class="bi bi-database-up me-2"></i>JSON Backup & Restore
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small">
+                                        Backup all local storage data into a single JSON file or restore records from a previously generated backup file.
+                                    </p>
+                                    <div class="d-grid gap-2 mb-3">
+                                        <button class="btn btn-primary" onclick="storage.exportBackupJSON()"><i class="bi bi-box-arrow-down me-2"></i>Download JSON Backup</button>
+                                    </div>
+                                    <hr>
+                                    <label class="form-label fw-semibold small">Restore Data from JSON File</label>
+                                    <input type="file" class="form-control form-control-sm" id="jsonImportInput" accept=".json">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. APPLICATION SETTINGS VIEW -->
+                <section id="view-settings" class="app-view">
+                    <h4 class="fw-bold text-navy mb-3">Application Settings & Integrations</h4>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold py-3">
+                                    <i class="bi bi-google me-2"></i>Google Sheets Integration Config
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-muted">
+                                        Optional OAuth 2.0 Client setup for direct synchronization with Google Sheets.
+                                    </p>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold">Google OAuth Client ID</label>
+                                        <input type="text" class="form-control form-control-sm" id="googleClientId" placeholder="e.g. xxxx.apps.googleusercontent.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold">Target Spreadsheet ID</label>
+                                        <input type="text" class="form-control form-control-sm" id="googleSpreadsheetId" placeholder="Spreadsheet URL Key">
+                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" id="btnSaveGoogleConfig">Save Google Config</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white fw-bold py-3 text-danger">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>System Data Management
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-muted">
+                                        Manage local database state. Warning: Clearing records permanently removes all stored assessment submissions from this browser.
+                                    </p>
+                                    <button class="btn btn-danger btn-sm" onclick="app.confirmClearAllData()"><i class="bi bi-trash me-1"></i> Clear All Saved Records</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- View Record Modal -->
+    <div class="modal fade" id="viewRecordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-navy text-white">
+                    <h5 class="modal-title" id="viewRecordModalTitle">Participant Record Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="viewRecordModalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/form-schema.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/report.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

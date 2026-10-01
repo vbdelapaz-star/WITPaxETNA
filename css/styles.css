@@ -1,0 +1,229 @@
+/* Styling Theme Variables */
+:root {
+    --color-navy: #0d233a;
+    --color-steel: #4a607a;
+    --color-accent-orange: #f36b21;
+    --color-light-bg: #f8f9fa;
+    --color-sidebar-bg: #1a2530;
+    --color-border: #e2e8f0;
+}
+
+body {
+    font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--color-light-bg);
+    color: #2d3748;
+    line-height: 1.5;
+}
+
+/* Layout */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--color-sidebar-bg);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+    flex-grow: 1;
+}
+
+.sidebar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--color-accent-orange);
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.top-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content-body {
+    flex-grow: 1;
+}
+
+/* Views Navigation */
+.app-view {
+    display: none;
+}
+
+.app-view.active {
+    display: block;
+}
+
+/* Typography & Utility Colors */
+.text-navy {
+    color: var(--color-navy);
+}
+
+.bg-navy {
+    background-color: var(--color-navy);
+}
+
+/* Form Styles */
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.5rem 1rem;
+}
+
+.rating-table th,
+.rating-table td {
+    vertical-align: middle;
+}
+
+.rating-table input[type="radio"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    cursor: pointer;
+}
+
+/* Step Wizard */
+.step-wizard {
+    gap: 0.25rem;
+}
+
+.step-btn {
+    border: 1px solid var(--color-border);
+    background-color: #fff;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 4px;
+    color: var(--color-steel);
+    cursor: pointer;
+}
+
+.step-btn.active {
+    background-color: var(--color-navy);
+    color: #fff;
+    border-color: var(--color-navy);
+}
+
+.step-btn.completed {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+/* Icon Circles */
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Report Styles */
+.report-document {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #1a202c;
+}
+
+.report-section {
+    margin-bottom: 2rem;
+}
+
+.report-section-title {
+    border-bottom: 2px solid var(--color-navy);
+    padding-bottom: 0.35rem;
+    color: var(--color-navy);
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+/* Responsive Hide for Sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        bottom: 0;
+    }
+    .sidebar.show {
+        left: 0;
+    }
+}
+
+/* Print Stylesheet */
+@media print {
+    .sidebar,
+    .top-header,
+    .no-print {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .report-document {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    body {
+        background-color: #fff !important;
+    }
+}

@@ -223,6 +223,97 @@ body {
         padding: 0 !important;
     }
 
+    /* Sidebar Container */
+.app-sidebar {
+    width: 260px;
+    height: 100vh;
+    background-color: #0f172a; /* Deep Navy Dark Mode */
+    color: #94a3b8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+    transition: margin-left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Branding */
+.sidebar-header {
+    background-color: #1e293b;
+}
+
+.brand-logo {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+}
+
+/* Nav Item Base Styling */
+.sidebar-nav .nav-link {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.925rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-nav .nav-link i {
+    font-size: 1.15rem;
+    min-width: 26px;
+    transition: transform 0.2s ease;
+}
+
+/* Hover States */
+.sidebar-nav .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateX(3px);
+}
+
+.sidebar-nav .nav-link:hover i {
+    color: #38bdf8;
+}
+
+/* Active Nav State */
+.sidebar-nav .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    font-weight: 600;
+}
+
+.sidebar-nav .nav-link.active i {
+    color: #ffffff;
+}
+
+/* Offset Main Content Body */
+.main-content {
+    margin-left: 260px;
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #f8fafc;
+}
+
+/* Responsive Styles for Mobile Displays */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        margin-left: -260px;
+    }
+    
+    .app-sidebar.show {
+        margin-left: 0;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
     body {
         background-color: #fff !important;
     }

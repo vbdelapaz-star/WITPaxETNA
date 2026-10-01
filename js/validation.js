@@ -1,7 +1,10 @@
 /**
- * Form Validation and Enforcements
+ * Form Validation and Completion Tracker
  */
 const validation = {
+    /**
+     * Validates a single step/part of the form.
+     */
     validatePart(stepNumber, formData) {
         const errors = [];
 
@@ -24,47 +27,57 @@ const validation = {
         }
 
         if (stepNumber === 3) {
-            FORM_SCHEMA.technicalMatrixRows.forEach(row => {
-                if (!formData.technicalMatrix[row.id]) {
-                    errors.push(`Rating missing for technical competency: "${row.label}"`);
-                }
-            });
+            if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.technicalMatrixRows) {
+                FORM_SCHEMA.technicalMatrixRows.forEach(row => {
+                    if (!formData.technicalMatrix || !formData.technicalMatrix[row.id]) {
+                        errors.push(`Rating missing for technical competency: "${row.label}"`);
+                    }
+                });
+            }
         }
 
         if (stepNumber === 4) {
             if (!formData.usedSimulator) errors.push("Simulator experience status is required.");
             if (!formData.seaberyExperience) errors.push("SEABERY experience level is required.");
-            FORM_SCHEMA.simulatorMatrixRows.forEach(row => {
-                if (!formData.simulatorMatrix[row.id]) {
-                    errors.push(`Rating missing for simulator function: "${row.label}"`);
-                }
-            });
+            if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.simulatorMatrixRows) {
+                FORM_SCHEMA.simulatorMatrixRows.forEach(row => {
+                    if (!formData.simulatorMatrix || !formData.simulatorMatrix[row.id]) {
+                        errors.push(`Rating missing for simulator function: "${row.label}"`);
+                    }
+                });
+            }
         }
 
         if (stepNumber === 5) {
-            FORM_SCHEMA.instructionalMatrixRows.forEach(row => {
-                if (!formData.instructionalMatrix[row.id]) {
-                    errors.push(`Rating missing for instructional area: "${row.label}"`);
-                }
-            });
+            if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.instructionalMatrixRows) {
+                FORM_SCHEMA.instructionalMatrixRows.forEach(row => {
+                    if (!formData.instructionalMatrix || !formData.instructionalMatrix[row.id]) {
+                        errors.push(`Rating missing for instructional area: "${row.label}"`);
+                    }
+                });
+            }
         }
 
         if (stepNumber === 7) {
-            FORM_SCHEMA.learningTopics.forEach(topic => {
-                const cur = formData.learningNeeds[topic.id]?.ability;
-                const imp = formData.learningNeeds[topic.id]?.importance;
-                if (!cur || !imp) {
-                    errors.push(`Both Ability & Importance ratings required for topic: "${topic.label}"`);
-                }
-            });
+            if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.learningTopics) {
+                FORM_SCHEMA.learningTopics.forEach(topic => {
+                    const cur = formData.learningNeeds?.[topic.id]?.ability;
+                    const imp = formData.learningNeeds?.[topic.id]?.importance;
+                    if (!cur || !imp) {
+                        errors.push(`Both Ability & Importance ratings required for topic: "${topic.label}"`);
+                    }
+                });
+            }
         }
 
         if (stepNumber === 8) {
-            FORM_SCHEMA.baselineQuestions.forEach((q, idx) => {
-                if (!formData.baselineAnswers[q.id]) {
-                    errors.push(`Question ${idx + 1} in baseline check is unanswered.`);
-                }
-            });
+            if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.baselineQuestions) {
+                FORM_SCHEMA.baselineQuestions.forEach((q, idx) => {
+                    if (!formData.baselineAnswers || !formData.baselineAnswers[q.id]) {
+                        errors.push(`Question ${idx + 1} in baseline check is unanswered.`);
+                    }
+                });
+            }
             if (!formData.consent) {
                 errors.push("You must accept the data privacy consent before submitting.");
             }
@@ -73,6 +86,24 @@ const validation = {
         return errors;
     },
 
+    /**
+     * Validates all steps across the entire form (used prior to final submission).
+     */
+    validateAll(formData) {
+        let allErrors = [];
+        for (let step = 1; step <= 8; step++) {
+            const stepErrors = this.validatePart(step, formData);
+            if (stepErrors.length > 0) {
+                allErrors.push(`--- Part ${step} ---`);
+                allErrors = allErrors.concat(stepErrors);
+            }
+        }
+        return allErrors;
+    },
+
+    /**
+     * Calculates total completion percentage across required fields.
+     */
     calculateCompletionPercentage(formData) {
         let totalItems = 0;
         let completedItems = 0;
@@ -93,37 +124,47 @@ const validation = {
         if (formData.skillLevel) completedItems++;
 
         // Part 3 Matrix
-        totalItems += FORM_SCHEMA.technicalMatrixRows.length;
-        FORM_SCHEMA.technicalMatrixRows.forEach(row => {
-            if (formData.technicalMatrix?.[row.id]) completedItems++;
-        });
+        if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.technicalMatrixRows) {
+            totalItems += FORM_SCHEMA.technicalMatrixRows.length;
+            FORM_SCHEMA.technicalMatrixRows.forEach(row => {
+                if (formData.technicalMatrix?.[row.id]) completedItems++;
+            });
+        }
 
         // Part 4 Matrix
-        totalItems += FORM_SCHEMA.simulatorMatrixRows.length;
-        FORM_SCHEMA.simulatorMatrixRows.forEach(row => {
-            if (formData.simulatorMatrix?.[row.id]) completedItems++;
-        });
+        if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.simulatorMatrixRows) {
+            totalItems += FORM_SCHEMA.simulatorMatrixRows.length;
+            FORM_SCHEMA.simulatorMatrixRows.forEach(row => {
+                if (formData.simulatorMatrix?.[row.id]) completedItems++;
+            });
+        }
 
         // Part 5 Matrix
-        totalItems += FORM_SCHEMA.instructionalMatrixRows.length;
-        FORM_SCHEMA.instructionalMatrixRows.forEach(row => {
-            if (formData.instructionalMatrix?.[row.id]) completedItems++;
-        });
+        if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.instructionalMatrixRows) {
+            totalItems += FORM_SCHEMA.instructionalMatrixRows.length;
+            FORM_SCHEMA.instructionalMatrixRows.forEach(row => {
+                if (formData.instructionalMatrix?.[row.id]) completedItems++;
+            });
+        }
 
         // Part 7 Matrix
-        totalItems += FORM_SCHEMA.learningTopics.length;
-        FORM_SCHEMA.learningTopics.forEach(topic => {
-            if (formData.learningNeeds?.[topic.id]?.ability && formData.learningNeeds?.[topic.id]?.importance) {
-                completedItems++;
-            }
-        });
+        if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.learningTopics) {
+            totalItems += FORM_SCHEMA.learningTopics.length;
+            FORM_SCHEMA.learningTopics.forEach(topic => {
+                if (formData.learningNeeds?.[topic.id]?.ability && formData.learningNeeds?.[topic.id]?.importance) {
+                    completedItems++;
+                }
+            });
+        }
 
         // Part 8 Baseline
-        totalItems += FORM_SCHEMA.baselineQuestions.length;
-        FORM_SCHEMA.baselineQuestions.forEach(q => {
-            if (formData.baselineAnswers?.[q.id]) completedItems++;
-        });
+        if (typeof FORM_SCHEMA !== 'undefined' && FORM_SCHEMA.baselineQuestions) {
+            totalItems += FORM_SCHEMA.baselineQuestions.length;
+            FORM_SCHEMA.baselineQuestions.forEach(q => {
+                if (formData.baselineAnswers?.[q.id]) completedItems++;
+            });
+        }
 
-        return Math.round((completedItems / totalItems) * 100);
+        return totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
     }
 };
